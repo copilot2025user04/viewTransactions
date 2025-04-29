@@ -1,0 +1,31 @@
+# Spring Boot application configuration file
+server:
+  Port: 8082
+
+
+spring:
+  application:
+    name: viewTRansaction
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/mysql_tms_ti
+    username: root
+    password: tmsroot
+    pool:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  sql:
+    init:
+      platform: mysql
+
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
+corsUrl: ${cors.url:localhost:8081}
