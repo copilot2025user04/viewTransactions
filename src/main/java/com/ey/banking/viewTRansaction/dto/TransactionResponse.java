@@ -11,7 +11,7 @@ public class TransactionResponse {
     private String transactionId;
     private String senderAccount;
     private String receiverAccount;
-    private BigDecimal amount;
+    private Integer amount;
     private String status;
     private String transactionCategory;
 }

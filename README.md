@@ -17,6 +17,6 @@ SHOW TABLES;
 show databases;
 DESCRIBE transaction;
 
-docker build -t viewTRansaction:4 .
-docker tag viewTRansaction:4 bikashhasmobile/view_transaction:2.0.0
-docker push bikashhasmobile/view_transaction:3.0.0
+`docker build -t viewTRansaction:4 .``
+`docker tag viewTRansaction:4 bikashhasmobile/view_transaction:2.0.0`
+`docker push bikashhasmobile/view_transaction:3.0.0`
