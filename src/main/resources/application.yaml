@@ -29,3 +29,8 @@ logging:
   level:
     org.springframework.r2dbc: DEBUG
 corsUrl: ${cors.url:localhost:8081}
+kafka:
+  transaction:
+    topic: transaction_initiation
+  bootstrap:
+    address: localhost:9092

@@ -19,6 +19,8 @@ public class TransactionService {
     @Autowired
     private R2dbcEntityTemplate r2dbcEntityTemplate;
     @Autowired
+    KafkaProducerService kafkaProducerService;
+    @Autowired
     private final TransactionRepository transactionRepository;
 
     public Flux<TransactionResponse> getAllTransactions() {
@@ -50,14 +52,33 @@ public class TransactionService {
         if (transaction.getTransactionId() == null || transaction.getTransactionId().isEmpty()) {
             transaction.setTransactionId(UUID.randomUUID().toString());
         }
-        transaction.setStatus("SUCCESS");
+        if (transaction.getCurrency() == null || transaction.getTransactionId().isEmpty()) {
+            transaction.setCurrency("USD");
+        }
+        transaction.setStatus("PENDING");
 
-       return r2dbcEntityTemplate.insert(Transaction.class)
-    .using(transaction)
-    .thenReturn(new Response("success"))
-    .onErrorResume(ex -> {
-     System.out.println("Error occurred"+ex);
-        return Mono.just(new Response("failure"));
-    });
+        return r2dbcEntityTemplate.insert(Transaction.class)
+                .using(transaction)
+                .flatMap(responseTransaction -> {
+                    // Send responseTransaction to Kafka topic
+                    sendToKafka(responseTransaction);
+                    return Mono.just(new Response("success"));
+                })
+                .onErrorResume(ex -> {
+                    System.out.println("Error occurred" + ex);
+                    return Mono.just(new Response("failure"));
+                });
+
+    }
+    private void sendToKafka(Transaction transaction) {
+        // Implement Kafka producer logic here
+        try {
+            System.out.println("Sending transaction to Kafka: " + transaction);
+            kafkaProducerService.sendMessage(transaction); // Simulate delay
+            System.out.println("Transaction sent to Kafka successfully");
+        } catch (Exception e) {
+            System.out.println("Error sending transaction to Kafka: " + e.getMessage());
+        }
+
     }
 }
